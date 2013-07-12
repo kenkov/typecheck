@@ -2,6 +2,7 @@
 # coding:utf-8
 
 import ast
+from pprint import pprint
 
 
 def node_type(node: ast.AST) -> str:
@@ -9,12 +10,21 @@ def node_type(node: ast.AST) -> str:
 
 
 def node_name(node: ast.AST) -> str:
-    if hasattr(node, "id"):
+    typ = node_type(node)
+    if typ == "Name":
         return node.id
+    elif typ == "Attribute":
+        return attr_node_name(node)
     elif hasattr(node, "name"):
         return node.name
     else:
         return ""
+
+
+def attr_node_name(node):
+    typ = node.attr
+    name = node_name(node.value)
+    return ".".join([name, typ])
 
 
 class Types(object):
@@ -42,7 +52,15 @@ class Types(object):
         func_binding["args"] = []
         # args
         for arg in node.args.args:
-            typ = arg.annotation.id if arg.annotation else "undefined"
+            #typ = arg.annotation.id if arg.annotation else "undefined"
+            #if arg.annotation:
+            #    pprint(node_type(arg.annotation))
+            #    pprint(arg.annotation.__dict__)
+            #    if hasattr(arg.annotation, "value"):
+            #        pprint(arg.annotation.value.__dict__)
+            typ = node_name(arg.annotation)
+            if typ == "":
+                typ = "undefined"
             func_binding["args"].append(
                 {"symbol": arg.arg, "type": typ})
         # returns
@@ -122,3 +140,13 @@ if __name__ == "__main__":
     test_classfunc()
     test_func()
     test_both()
+
+    import sys
+
+    filename = sys.argv[1]
+    with open(filename, "r") as f:
+        source = f.read()
+        comp = compile_code(source)
+        t = Types(comp)
+        t.check()
+        pprint(t.bindings)
