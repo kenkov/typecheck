@@ -1,0 +1,4 @@
+*.pyc
+typecheck.egg-info/
+__pycache__/
+test/__pycache__/
