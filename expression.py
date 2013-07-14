@@ -97,6 +97,21 @@ class ShowExpr:
             self.show(node.elt),
             " ".join(map(self.show, node.generators)))
 
+    def show_SetComp(self, node):
+        return "{{{} {}}}".format(
+            self.show(node.elt),
+            " ".join(map(self.show, node.generators)))
+
+    def show_DictComp(self, node):
+        return "{{{} {}}}".format(
+            ": ".join([self.show(node.key), self.show(node.value)]),
+            " ".join(map(self.show, node.generators)))
+
+    def show_GeneratorExp(self, node):
+        return "({} {})".format(
+            self.show(node.elt),
+            " ".join(map(self.show, node.generators)))
+
     def show_Num(self, node):
         return str(node.n)
 

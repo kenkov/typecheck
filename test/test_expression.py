@@ -78,6 +78,20 @@ class ShowExprTest(unittest.TestCase):
                   '[x for x in [1, 2, 3] if x % 2]']
         self.check(source)
 
+    def test_SetComp(self):
+        source = ['{x for x in [1, 2, 3]}',
+                  '{x for x in [1, 2, 3] if x % 2}']
+        self.check(source)
+
+    def test_DictComp(self):
+        source = ['{x: x for x in [1, 2, 3]}',
+                  '{x: x for x in [1, 2, 3] if x % 2}']
+        self.check(source)
+
+    def test_GeneratorComp(self):
+        source = ['(x for x in [1, 2, 3])']
+        self.check(source)
+
 
 if __name__ == '__main__':
     unittest.main()
