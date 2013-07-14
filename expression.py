@@ -92,11 +92,20 @@ class ShowExpr:
         return "{{{}}}".format(
             ", ".join(map(self.show, node.elts)))
 
+    def show_ListComp(self, node):
+        return "[{} {}]".format(
+            self.show(node.elt),
+            " ".join(map(self.show, node.generators)))
+
     def show_Num(self, node):
         return str(node.n)
 
     def show_Name(self, node):
         return node.id
+
+    def show_List(self, node):
+        return "[{}]".format(
+            ", ".join(map(self.show, node.elts)))
 
     # boolop = And | Or
     def show_Or(self, node):
@@ -152,6 +161,20 @@ class ShowExpr:
 
     def show_USub(self, node):
         return "-"
+
+    # comprehension = (expr target, expr iter, expr* ifs)
+    def show_comprehension(self, node):
+        ifs = node.ifs
+        if ifs:
+            return "for {} in {} {}".format(
+                self.show(node.target),
+                self.show(node.iter),
+                " ".join(["if {}".format(item)
+                          for item in map(self.show, ifs)]))
+        else:
+            return "for {} in {}".format(
+                self.show(node.target),
+                self.show(node.iter))
 
     # arguments = (arg* args, identifier? vararg, expr? varargannotation,
     #              arg* kwonlyargs, identifier? kwarg,

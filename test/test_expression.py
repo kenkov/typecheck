@@ -69,6 +69,15 @@ class ShowExprTest(unittest.TestCase):
         source = ['{1, 2, 3, 4}']
         self.check(source)
 
+    def test_List(self):
+        source = ['[1, 2, 3, 4]']
+        self.check(source)
+
+    def test_ListComp(self):
+        source = ['[x for x in [1, 2, 3]]',
+                  '[x for x in [1, 2, 3] if x % 2]']
+        self.check(source)
+
 
 if __name__ == '__main__':
     unittest.main()
