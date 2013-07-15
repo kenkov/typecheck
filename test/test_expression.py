@@ -122,9 +122,22 @@ class ShowExprTest(unittest.TestCase):
 
     def test_Str(self):
         source = [
-            '"fuga"',
-            #"hogefuga",
-            #'"hogefugafuga"'
+            "'fuga'",
+            # error raised in the following tests
+            #'"fuga"',
+            #"\"'fuga'\""
+        ]
+        self.check(source)
+
+    def test_Bytes(self):
+        source = [
+            "b'hello'",
+        ]
+        self.check(source)
+
+    def test_Ellipsis(self):
+        source = [
+            "Ellipsis",
         ]
         self.check(source)
 

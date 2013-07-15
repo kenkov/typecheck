@@ -142,8 +142,18 @@ class ShowExpr:
 
     def show_Str(self, node):
         # implement ' and "
-        return '"{}"'.format(node.s)
+        return "'{}'".format(node.s)
 
+    def show_Bytes(self, node):
+        # implement ' and "
+        #
+        # node.s == b'hoge'
+        return "{}".format(node.s)
+
+    def show_Ellipsis(self, node):
+        return "Ellipsis"
+
+    # -- the following expression can appear in assignment context
     def show_Name(self, node):
         return node.id
 
