@@ -92,6 +92,42 @@ class ShowExprTest(unittest.TestCase):
         source = ['(x for x in [1, 2, 3])']
         self.check(source)
 
+    # Yield and YieldFrom should be used in function
+    #def test_Yield(self):
+    #    source = ['yield True',
+    #              'yield']
+    #    self.check(source)
+    #
+    #
+    #def test_YieldFrom(self):
+    #    source = ['yield from [1, 2, 3]']
+    #    self.check(source)
+
+    def test_Compare(self):
+        source = ['1 < 2',
+                  '1 < 2 < 3',
+                  # Error raised
+                  # '1 < (2 < 3)
+                  ]
+        self.check(source)
+
+    def test_Call(self):
+        source = [
+            # The following expressions raise error
+            # when running
+            'dir(object, x=1)',
+            'dir(object, 1, 2, x=1, y=2)'
+        ]
+        self.check(source)
+
+    def test_Str(self):
+        source = [
+            '"fuga"',
+            #"hogefuga",
+            #'"hogefugafuga"'
+        ]
+        self.check(source)
+
 
 if __name__ == '__main__':
     unittest.main()
