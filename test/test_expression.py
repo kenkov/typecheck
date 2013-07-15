@@ -73,6 +73,10 @@ class ShowExprTest(unittest.TestCase):
         source = ['[1, 2, 3, 4]']
         self.check(source)
 
+    def test_Tuple(self):
+        source = ['(1, 2, 3, 4)']
+        self.check(source)
+
     def test_ListComp(self):
         source = ['[x for x in [1, 2, 3]]',
                   '[x for x in [1, 2, 3] if x % 2]']
@@ -139,6 +143,13 @@ class ShowExprTest(unittest.TestCase):
         source = [
             "Ellipsis",
         ]
+        self.check(source)
+
+    def test_Attribute(self):
+        source = [
+            "hoge.fuga",
+            "hoge.fuga.hogefuga",
+            "hoge.fuga()"]
         self.check(source)
 
 

@@ -153,12 +153,21 @@ class ShowExpr:
     def show_Ellipsis(self, node):
         return "Ellipsis"
 
+    def show_Attribute(self, node):
+        return "{}.{}".format(
+            self.show(node.value),
+            node.attr)
+
     # -- the following expression can appear in assignment context
     def show_Name(self, node):
         return node.id
 
     def show_List(self, node):
         return "[{}]".format(
+            ", ".join(map(self.show, node.elts)))
+
+    def show_Tuple(self, node):
+        return "({})".format(
             ", ".join(map(self.show, node.elts)))
 
     # boolop = And | Or
