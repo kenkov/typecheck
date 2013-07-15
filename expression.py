@@ -112,9 +112,48 @@ class ShowExpr:
             self.show(node.elt),
             " ".join(map(self.show, node.generators)))
 
+    def show_Yield(self, node):
+        if node.value:
+            return "yield {}".format(
+                self.show(node.value) if node.value else "")
+        else:
+            return "yield"
+
+    def show_YieldFrom(self, node):
+        return "yield from {}".format(self.show(node.value))
+
+    def show_Compare(self, node):
+        pair = map(
+            lambda x: "{} {}".format(self.show(x[0]), self.show(x[1])),
+            zip(node.ops, node.comparators))
+        return "{} {}".format(self.show(node.left),
+                              " ".join(pair))
+
+    def show_Call(self, node):
+        # should implement
+        # - expr? starargs
+        # - expr? kwargs
+        return "{}({})".format(
+            self.show(node.func),
+            ", ".join(map(self.show, node.args + node.keywords)))
+
     def show_Num(self, node):
         return str(node.n)
 
+    def show_Str(self, node):
+        # implement ' and "
+        return "'{}'".format(node.s)
+
+    def show_Bytes(self, node):
+        # implement ' and "
+        #
+        # node.s == b'hoge'
+        return "{}".format(node.s)
+
+    def show_Ellipsis(self, node):
+        return "Ellipsis"
+
+    # -- the following expression can appear in assignment context
     def show_Name(self, node):
         return node.id
 
@@ -177,6 +216,37 @@ class ShowExpr:
     def show_USub(self, node):
         return "-"
 
+    # cmpop = Eq | NotEq | Lt | LtE | Gt | GtE | Is | IsNot | In | NotIn
+    def show_Eq(self, node):
+        return "=="
+
+    def show_NotEq(self, node):
+        return "!="
+
+    def show_Lt(self, node):
+        return "<"
+
+    def show_LtE(self, node):
+        return "<="
+
+    def show_Gt(self, node):
+        return ">"
+
+    def show_GtE(self, node):
+        return ">="
+
+    def show_Is(self, node):
+        return "is"
+
+    def show_IsNot(self, node):
+        return "is not"
+
+    def show_In(self, node):
+        return "in"
+
+    def show_NotIn(self, node):
+        return "not in"
+
     # comprehension = (expr target, expr iter, expr* ifs)
     def show_comprehension(self, node):
         ifs = node.ifs
@@ -213,6 +283,12 @@ class ShowExpr:
                 self.show(node.annotation))
         else:
             return node.arg
+
+    # keyword = (identifier arg, expr value)
+    def show_keyword(self, node):
+        return "{}={}".format(
+            node.arg,
+            self.show(node.value))
 
 
 class V(ast.NodeVisitor):
