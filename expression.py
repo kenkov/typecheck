@@ -19,6 +19,69 @@ def node_type(node: ast.AST) -> str:
     return node.__class__.__name__
 
 
+class ShowStmt:
+    def __init__(self):
+        self.show_expr = ShowExpr()
+        self.exshow = self.show_expr.show
+
+    def show(self, node: ast.stmt) -> str:
+        try:
+            fun = getattr(self, "{}_{}".format("show", node_type(node)))
+            return fun(node)
+        except AttributeError:
+            raise
+
+    def show_FunctionDef(self, node):
+        if node.returns:
+            return "{}({}) -> {}".format(
+                node.name,
+                self.exshow(node.args),
+                self.exshow(node.returns))
+        else:
+            return "{}({})".format(
+                node.name,
+                self.exshow(node.args))
+
+    # stmt = FunctionDef(identifier name, arguments args,
+    #                    stmt* body, expr* decorator_list, expr? returns)
+    #           | ClassDef(identifier name,
+    #              expr* bases,
+    #              keyword* keywords,
+    #              expr? starargs,
+    #              expr? kwargs,
+    #              stmt* body,
+    #              expr* decorator_list)
+    #           | Return(expr? value)
+    #
+    #           | Delete(expr* targets)
+    #           | Assign(expr* targets, expr value)
+    #           | AugAssign(expr target, operator op, expr value)
+    #
+    #           -- use 'orelse' because else is a keyword in target languages
+    #           | For(expr target, expr iter, stmt* body, stmt* orelse)
+    #           | While(expr test, stmt* body, stmt* orelse)
+    #           | If(expr test, stmt* body, stmt* orelse)
+    #           | With(withitem* items, stmt* body)
+    #
+    #           | Raise(expr? exc, expr? cause)
+    #           | Try(stmt* body, excepthandler* handlers, stmt* orelse,
+    #                 stmt* finalbody)
+    #           | Assert(expr test, expr? msg)
+    #
+    #           | Import(alias* names)
+    #           | ImportFrom(identifier? module, alias* names, int? level)
+    #
+    #           | Global(identifier* names)
+    #           | Nonlocal(identifier* names)
+    #           | Expr(expr value)
+    #           | Pass | Break | Continue
+    #
+    #           -- XXX Jython will be different
+    #           -- col_offset is the byte offset in the utf8 string
+    #           -- the parser uses
+    #           attributes (int lineno, int col_offset)
+
+
 class ShowExpr:
     def __init__(self):
         pass
