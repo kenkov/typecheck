@@ -153,12 +153,21 @@ class ShowExpr:
     def show_Ellipsis(self, node):
         return "Ellipsis"
 
+    # -- the following expression can appear in assignment context
     def show_Attribute(self, node):
         return "{}.{}".format(
             self.show(node.value),
             node.attr)
 
-    # -- the following expression can appear in assignment context
+    def show_Subscript(self, node):
+        return "{}[{}]".format(
+            self.show(node.value),
+            self.show(node.slice))
+
+    def show_Starred(self, node):
+        return "*{}".format(
+            self.show(node.value))
+
     def show_Name(self, node):
         return node.id
 
@@ -169,6 +178,23 @@ class ShowExpr:
     def show_Tuple(self, node):
         return "({})".format(
             ", ".join(map(self.show, node.elts)))
+
+    # slice = Slice(expr? lower, expr? upper, expr? step)
+    #       | ExtSlice(slice* dims)
+    #       | Index(expr value)
+    def show_Slice(self, node):
+        return "{}:{}:{}".format(
+            self.show(node.lower) if node.lower else "",
+            self.show(node.upper) if node.upper else "",
+            self.show(node.step) if node.step else "")
+
+    # IMPLEMENT the extslice method
+    def show_ExtSlice(self, node):
+        return "{}".format(
+            ", ".join(map(self.show, node.dims)))
+
+    def show_Index(self, node):
+        return "{}".format(self.show(node.value))
 
     # boolop = And | Or
     def show_Or(self, node):

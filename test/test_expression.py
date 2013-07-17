@@ -152,6 +152,31 @@ class ShowExprTest(unittest.TestCase):
             "hoge.fuga()"]
         self.check(source)
 
+    def test_Subscript(self):
+        source = [
+            # slice
+            "o[1:2:3]",
+            "o[1::]",
+            "o[:2:]",
+            "o[::3]",
+            "o[1:2:]",
+            "o[:2:3]",
+            "o[1::3]",
+            "o[::]",
+            # index
+            "o[1]",
+            # extslice
+            "o[::, ::]",
+            "o[1:2:3, 4:5:6]"
+        ]
+        self.check(source)
+
+    def test_Starred(self):
+        source = [
+            #"*[1, 2, 3]"
+        ]
+        self.check(source)
+
 
 if __name__ == '__main__':
     unittest.main()
